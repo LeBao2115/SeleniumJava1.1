@@ -4,6 +4,9 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 
 import java.time.Duration;
 
@@ -12,7 +15,7 @@ public class NewProjectPage {
     private static String password = "123456";
     public static WebDriver driver;
 
-    public static void login(){
+    public void login(){
         WebElement loginEmail = driver.findElement(By.id("email"));
         loginEmail.sendKeys(email);
 
@@ -23,7 +26,7 @@ public class NewProjectPage {
         loginBtn.click();
     }
 
-    public static void fillInfoNewProject() throws InterruptedException {
+    public void fillInfoNewProject() throws InterruptedException {
         driver.findElement(By.xpath("//aside//li[contains(normalize-space(),'Project')]")).click();
         driver.findElement(By.xpath("//a[normalize-space()='New Project']")).click();
 
@@ -88,13 +91,22 @@ public class NewProjectPage {
         firstTag.click();
 
     }
-
-    public static void main(String[] args) throws InterruptedException {
+    @BeforeTest
+    public void init(){
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         driver.get("https://crm.anhtester.com/admin/authentication");
+    }
+
+    @Test
+    public void testNewProjectPage() throws InterruptedException {
         login();
         fillInfoNewProject();
+    }
+
+    @AfterTest
+    public void tearDown(){
+        driver.quit();
     }
 }
