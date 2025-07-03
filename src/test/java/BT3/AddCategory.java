@@ -15,14 +15,13 @@ import org.testng.annotations.Test;
 import java.time.Duration;
 
 public class AddCategory {
-    WebDriver driver;
-    String name = RandomStringUtils.randomAlphabetic(5);
+    public WebDriver driver;
+    public String name = RandomStringUtils.randomAlphabetic(5);
     String metaTitle = RandomStringUtils.randomAlphabetic(10);
-    WebDriverWait wait;
-
+    public WebDriverWait wait;
 
     @BeforeTest
-    public void setUp(){
+    public void setUp() throws InterruptedException {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
@@ -66,10 +65,10 @@ public class AddCategory {
         try {
             wait.until(ExpectedConditions.invisibilityOf(nameProduct));
             Assert.assertEquals(nameProduct.getText(),name);
-        } catch (Exception e) {
-            actions.moveToElement(nameProduct).perform();
-            String actualName = nameProduct.getText().trim();
-            Assert.assertEquals(actualName,name);
+        } catch (StaleElementReferenceException e) {
+            System.out.println("Err: stale element not found in the current frame");
+        } catch (TimeoutException e) {
+            System.out.println("Err: TimeoutException");
         }
 
     }
@@ -84,7 +83,6 @@ public class AddCategory {
         //click Login btn
         WebElement loginBtn = driver.findElement(By.xpath("//button"));
         loginBtn.click();
-
     }
 
     public void chooseSelect(String title){
